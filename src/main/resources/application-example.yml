@@ -1,0 +1,71 @@
+# ======================================================
+# PENGATURAN SERVER & APLIKASI
+# ======================================================
+server:
+  port: 8080
+
+spring:
+  application:
+    name: usermanagement
+
+  # ======================================================
+  # PENGATURAN DATABASE (POSTGRESQL)
+  # ======================================================
+  datasource:
+    url: jdbc:postgresql://localhost:5433/bionic_usermgmt
+    username: admin
+    password: YOUR_DATABASE_PASSWORD
+    driver-class-name: org.postgresql.Driver
+
+  # ======================================================
+  # PENGATURAN JPA & HIBERNATE
+  # ======================================================
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # ======================================================
+  # PENGATURAN KEAMANAN (SPRING SECURITY OAUTH2)
+  # ======================================================
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # URI tempat Spring Security akan mengambil public key untuk validasi token
+          issuer-uri: http://localhost:8081/realms/bionic-merchant
+
+  mvc:
+    pathmatch:
+      # Mengizinkan Spring untuk mencocokkan URL
+      use-trailing-slash-match: true
+
+# ======================================================
+# PENGATURAN KONEKSI KE KEYCLOAK
+# ======================================================
+keycloak:
+  server-url: http://localhost:8081
+  realm: bionic-merchant
+
+  # --- Konfigurasi untuk Admin Client (Membuat user saat registrasi) ---
+  client-id: admin-cli
+  client-secret: YOUR_ADMIN_CLI_SECRET_HERE
+  grant-type: client_credentials
+
+  # --- Konfigurasi untuk alur Login (Proxy ke Keycloak) ---
+  login-client-id: bionic-api
+  login-client-secret: YOUR_BIONIC_API_SECRET_HERE
+  token-uri: ${keycloak.server-url}/realms/${keycloak.realm}/protocol/openid-connect/token
+
+# ======================================================
+# PENGATURAN DOKUMENTASI API (SWAGGER/OPENAPI)
+# ======================================================
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
