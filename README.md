@@ -82,7 +82,7 @@ sequenceDiagram
     K-->>A: access_token (5 min) + refresh_token
     A-->>U: tokens
     U->>A: GET /profiles/me (Authorization: Bearer access_token)
-    A->>A: verify signature, expiry, issuer; map realm_access.roles to ROLE_*
+    A->>A: verify signature, expiry, and issuer, then map realm_access.roles to ROLE_*
     A->>D: find user by keycloak_id = token "sub"
     A-->>U: 200 profile
 ```
