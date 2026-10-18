@@ -1,0 +1,12 @@
+package com.adisputraa.usermanagement.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record UpdateProfileRequest(
+        @NotBlank @Size(max = 100) String firstName,
+        @NotBlank @Size(max = 100) String lastName,
+        @Size(max = 32) String phoneNumber,
+        @Size(max = 255) String address
+) {
+}

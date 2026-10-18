@@ -1,0 +1,14 @@
+# Tests use a real PostgreSQL (Testcontainers) and mock everything that talks to Keycloak.
+keycloak:
+  server-url: http://keycloak.test.invalid
+  realm: test
+  admin-client:
+    client-id: test-admin
+    client-secret: test-secret
+  login-client:
+    client-id: test-login
+    client-secret: test-secret
+
+app:
+  bootstrap-admin:
+    enabled: false

@@ -1,0 +1,58 @@
+# Defaults match docker-compose.yml for local development.
+# Every secret can be overridden with an environment variable; never use these values in production.
+server:
+  port: 8080
+
+spring:
+  application:
+    name: user-management
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/usermanagement}
+    username: ${DB_USERNAME:usermanagement}
+    password: ${DB_PASSWORD:usermanagement}
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Flyway owns the schema; Hibernate only checks that entities match it.
+      ddl-auto: validate
+    show-sql: false
+
+  flyway:
+    enabled: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Spring downloads Keycloak's public keys from here to verify access tokens.
+          issuer-uri: ${keycloak.server-url}/realms/${keycloak.realm}
+
+keycloak:
+  server-url: ${KEYCLOAK_URL:http://localhost:8081}
+  realm: ${KEYCLOAK_REALM:user-management}
+  # Service account used to create, update, and delete users (client_credentials grant).
+  admin-client:
+    client-id: user-management-admin
+    client-secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET:dev-admin-client-secret}
+  # Client used to exchange username/password for tokens (password grant) and to refresh/log out.
+  login-client:
+    client-id: user-management-api
+    client-secret: ${KEYCLOAK_LOGIN_CLIENT_SECRET:dev-login-client-secret}
+
+app:
+  # Creates the first ADMIN account on startup when it does not exist yet.
+  bootstrap-admin:
+    enabled: ${BOOTSTRAP_ADMIN_ENABLED:true}
+    username: ${BOOTSTRAP_ADMIN_USERNAME:admin}
+    email: ${BOOTSTRAP_ADMIN_EMAIL:admin@example.com}
+    password: ${BOOTSTRAP_ADMIN_PASSWORD:admin12345}
+    # Keycloak needs ~30 s to start after "docker compose up"; keep retrying for this long.
+    wait-timeout: 90s
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

@@ -1,0 +1,50 @@
+{
+  "realm": "user-management",
+  "enabled": true,
+  "registrationAllowed": false,
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "roles": {
+    "realm": [
+      { "name": "ADMIN", "description": "Manages all users" },
+      { "name": "CUSTOMER", "description": "Default role for self-registered users" },
+      { "name": "MERCHANT", "description": "Merchant account" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "user-management-api",
+      "name": "User Management API (login)",
+      "description": "Used by the API to exchange username/password and refresh tokens. Dev-only secret.",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "dev-login-client-secret",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false
+    },
+    {
+      "clientId": "user-management-admin",
+      "name": "User Management API (admin)",
+      "description": "Service account the API uses to create, update, and delete users. Dev-only secret.",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "dev-admin-client-secret",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true
+    }
+  ],
+  "users": [
+    {
+      "username": "service-account-user-management-admin",
+      "enabled": true,
+      "serviceAccountClientId": "user-management-admin",
+      "clientRoles": {
+        "realm-management": ["manage-users", "view-users", "query-users", "view-realm"]
+      }
+    }
+  ]
+}
